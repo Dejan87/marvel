@@ -8,7 +8,10 @@ const character = (props) => (
             <img src={props.path} alt="Marvel Character" />
         </div>
         <div className={classes.Name}>
-            <p>{props.name}</p>
+            <p>Name:  {props.name}</p>
+        </div>
+        <div className={classes.Bookmark}>
+            <p className={classes.Status}>{props.status}</p>
         </div>
     </div>
 );

@@ -7,7 +7,7 @@ const ts = new Date().getTime();
 const hash = cryptoJS.MD5(ts + privateKey + publicKey).toString();
 
 const instance = axios.create({
-    baseURL: `https://gateway.marvel.com:443/v1/public/characters?ts=${ts}&apikey=${publicKey}&hash=${hash}&limit=20`
+    baseURL: `https://gateway.marvel.com:443/v1/public/characters?ts=${ts}&apikey=${publicKey}&hash=${hash}&limit=50`
 });
 
 export default instance;
