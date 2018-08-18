@@ -1,0 +1,29 @@
+.Image {
+    height: 50%;
+    width: 100%;
+}
+
+.Name,
+.Bookmark {
+    margin: 20px 0;
+}
+
+.Name {
+    color: #16a085;
+}
+
+.Row {
+    margin: 0 0 30px 0;
+    padding-left: 0;
+    padding-right: 0;
+    border-bottom: 1px solid #16a085;
+}
+
+.Status {
+    cursor: pointer;
+    transition: all .3s ease-in-out;
+}
+
+.Status:hover {
+    transform: scale(1.1);
+}

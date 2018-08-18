@@ -11,7 +11,7 @@ const character = (props) => (
             <p>Name:  {props.name}</p>
         </div>
         <div className={classes.Bookmark}>
-            <p className={classes.Status}>{props.status}</p>
+            <p onClick={props.bookmarkCharacter} className={classes.Status}>{props.status}</p>
         </div>
     </div>
 );

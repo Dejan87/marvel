@@ -4,6 +4,7 @@ import classes from "./Search.css";
 import axios from "../../axiosConfig";
 import Character from "../../components/Character/Character";
 import NavigationButtons from "../../components/NavigationButtons/NavigationButtons";
+import Bookmarks from "../../components/Bookmarks/Bookmarks";
 
 class Search extends Component {
     state = {
@@ -14,7 +15,21 @@ class Search extends Component {
         pageSize: 20, // Display 20 per page
         currentPage: 0,
         previousButtonDisabled: true,
-        nextButtonDisabled: false
+        nextButtonDisabled: false,
+        statusArray: []
+    }
+
+    componentWillMount() {
+        // Load user's bookmarks, if any
+        let bookmarks = JSON.parse(localStorage.getItem("bookmarks"));
+
+        if(bookmarks) {
+            // Do nothing
+        } else {
+            // Set the bookmarks array in local storage
+            let bookmarks = [];
+            localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
+        }
     }
 
     // Fetch all characters from Marvel API, limit 50
@@ -22,10 +37,10 @@ class Search extends Component {
         if(searchString !== "") {
             axios.get("/&nameStartsWith=" + searchString)
                 .then(response => {
-                console.log(response.data.data.results);
                 this.setState({...this.state, marvelCharacter: response.data.data.results});
 
                 this.renderCharacters(); // Render characters to the screen
+                this.setBookmarkStatus();
             })
             .catch(error => {
                 console.log(error);
@@ -38,6 +53,14 @@ class Search extends Component {
                 currentPageItems: []
             });
         }
+    }
+
+    setBookmarkStatus = () => {
+        let statusArray = this.state.currentPageItems.map(character => {
+                return {...character, status: "Please Bookmark Me"};
+        });
+
+        this.setState({...this.state, statusArray: statusArray});
     }
 
     handleSearch = (event) => {
@@ -130,15 +153,47 @@ class Search extends Component {
         });
     }
 
-    render() {
+    bookmarkCharacter = (id, index) => {
+        let bookmarked = JSON.parse(localStorage.getItem("bookmarks"));
+        let ids = bookmarked.map(bookmark => bookmark.id);
 
-        let characters = this.state.currentPageItems.length > 0 ? this.state.currentPageItems.map(character => {
+        // Check if character is already bookemarked
+        if(ids.indexOf(id) === -1) {
+            // Find the character that user wants to bookmark
+             let character = this.state.statusArray.filter(character => character.id === id);
+        
+            // Change it's status
+            character[0].status = "Bookmarked!";
+
+            // Replace the old status with the new one
+            let newStatusArray = [...this.state.statusArray];
+            newStatusArray[index] = character[0];
+
+            // Save user's character in local storage
+            //let bookmarks = JSON.parse(localStorage.getItem("bookmarks"));
+            bookmarked.push(character[0]);
+            localStorage.setItem("bookmarks", JSON.stringify(bookmarked));
+
+            this.setState({...this.state, statusArray: newStatusArray});
+        }
+
+        
+    }
+
+    render() {
+        let bookmarked = JSON.parse(localStorage.getItem("bookmarks"));
+
+        let ids = bookmarked.map(bookmark => bookmark.id);
+
+        let characters = this.state.currentPageItems.length > 0 ? this.state.currentPageItems.map((character, index) => {
             return <Character
                     key={character.id}
                     name={character.name}
                     path={character.thumbnail.path + "/standard_fantastic." + character.thumbnail.extension}
-                    status="Please, bookmark me!" />
-            }) : null;
+                    // If character is already bookmarked display "Bookmarked", otherwise show "Please Bookmark Me"
+                    status={this.state.statusArray[index] && ids.indexOf(character.id) === -1 ? this.state.statusArray[index].status : "Bookmarked!"}
+                    bookmarkCharacter={() => this.bookmarkCharacter(character.id, index)} />
+            }) : <Bookmarks />;
 
         // Check if we need buttons for pagination
         let navigation = this.state.marvelCharacter.length > this.state.pageSize 
