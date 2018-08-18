@@ -1,0 +1,14 @@
+.Image {
+    height: 50%;
+    width: 100%;
+}
+
+.Name {
+    margin: 20px 0;
+}
+
+.Row {
+    margin: 50px 0 30px 0;
+    padding-left: 0;
+    padding-right: 0;
+}
