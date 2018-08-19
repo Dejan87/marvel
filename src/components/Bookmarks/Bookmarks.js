@@ -3,7 +3,7 @@ import React from "react";
 import classes from "./Bookmarks.css";
 import Aux from "../../hoc/Auxiliary";
 
-const bookmarks = (props) => {
+const bookmarks = () => {
     let bookmarks = JSON.parse(localStorage.getItem("bookmarks"));
     
     let showBookmarks = bookmarks.map(bookmark => 
