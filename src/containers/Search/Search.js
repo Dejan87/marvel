@@ -180,6 +180,24 @@ class Search extends Component {
         
     }
 
+    removeCharacterFromBookmarks = (id) => {
+        let bookmarked = JSON.parse(localStorage.getItem("bookmarks"));
+        let ids = bookmarked.map(bookmark => bookmark.id);
+
+        // Verify that character is in bookmarks
+        if(ids.indexOf(id) > -1) {
+            let index = ids.indexOf(id);
+
+            // Remove character
+            bookmarked.splice(index, 1);
+
+            // Save bookmarks to local storage
+            localStorage.setItem("bookmarks", JSON.stringify(bookmarked));
+
+            this.setState({});
+        }
+    }
+
     render() {
         let bookmarked = JSON.parse(localStorage.getItem("bookmarks"));
 
@@ -193,7 +211,7 @@ class Search extends Component {
                     // If character is already bookmarked display "Bookmarked", otherwise show "Please Bookmark Me"
                     status={this.state.statusArray[index] && ids.indexOf(character.id) === -1 ? this.state.statusArray[index].status : "Bookmarked!"}
                     bookmarkCharacter={() => this.bookmarkCharacter(character.id, index)} />
-            }) : <Bookmarks />;
+            }) : <Bookmarks remove={(id) => this.removeCharacterFromBookmarks(id)}/>;
 
         // Check if we need buttons for pagination
         let navigation = this.state.marvelCharacter.length > this.state.pageSize 
