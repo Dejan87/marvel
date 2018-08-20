@@ -56,7 +56,7 @@ class Search extends Component {
     }
 
     setBookmarkStatus = () => {
-        let statusArray = this.state.currentPageItems.map(character => {
+        let statusArray = this.state.marvelCharacter.map(character => {
                 return {...character, status: "Please Bookmark Me"};
         });
 
